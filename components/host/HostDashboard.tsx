@@ -137,9 +137,14 @@ export default function HostDashboard({
   }, [dataService]);
 
   const handleCreateEvent = async (data: { title: string; description: string; type: Event['type']; timer_mode: Event['config']['timer_mode']; start_time?: string; end_time?: string; }) => {
-    await dataService.createEvent(data);
-    setIsModalOpen(false);
-    fetchEvents(); // Refresh list
+    try {
+      await dataService.createEvent(data);
+      setIsModalOpen(false);
+      fetchEvents(); // Refresh list on success
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+      alert(`Error creating event: ${errorMessage}\n\nPlease check your connection and ensure you are logged in correctly. If the problem persists, it might be a database security policy issue.`);
+    }
   }
 
   const handleDeleteEvent = async (eventId: string) => {

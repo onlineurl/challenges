@@ -36,9 +36,13 @@ export default function App() {
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      // If user signs in successfully while on auth screen, auto-navigate to dashboard
+      if (_event === 'SIGNED_IN' && view === 'host_auth') {
+        setView('host_dashboard');
+      }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [view]); // Dependency on view ensures we don't have a stale closure
 
   useEffect(() => {
     const restoreSession = async () => {
