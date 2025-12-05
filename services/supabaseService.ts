@@ -1,6 +1,6 @@
 import { supabase } from '../supabaseClient';
 import type { IDataService } from './IDataService';
-import type { Event, Challenge, Participant, CompletedChallenge, NewChallenge } from '../types';
+import type { Event, Challenge, Participant, CompletedChallenge, NewChallenge, EventType, TimerMode } from '../types';
 import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'date-fns';
 
 // Helper for real photo uploads
@@ -61,12 +61,38 @@ export const supabaseService: IDataService = {
     return { event };
   },
 
-  async createEvent(eventData) {
+  async createEvent(eventData: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; }) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Host user not found. Please log in.");
 
-    const { error } = await supabase.from('events').insert({ ...eventData, host_id: user.id });
-    if (error) throw new Error(`Event creation failed: ${error.message}`);
+    const joinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    const newEventPayload = {
+      host_id: user.id,
+      title: eventData.title,
+      description: eventData.description,
+      type: eventData.type,
+      start_time: eventData.start_time,
+      end_time: eventData.end_time,
+      join_code: joinCode,
+      config: {
+        timePerChallenge: 300,
+        maxParticipants: 50,
+        autoAssign: true,
+        points: { easy: 10, medium: 20, hard: 30 },
+        compression: { quality: 0.8, maxWidth: 1200 },
+        timer_mode: eventData.timer_mode,
+      }
+    };
+
+    const { error } = await supabase.from('events').insert(newEventPayload);
+    if (error) {
+        if (error.code === '23505') { 
+            // In a real app, you might retry with a new code. For now, just error out.
+            throw new Error(`Event creation failed: Could not generate a unique join code. Please try again.`);
+        }
+        throw new Error(`Event creation failed: ${error.message}`);
+    }
   },
 
   async deleteEvent(eventId: string) {
