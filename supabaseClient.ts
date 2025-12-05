@@ -1,5 +1,13 @@
-// FIX: Add Vite client types to resolve import.meta.env error.
-/// <reference types="vite/client" />
+// FIX: The reference to vite/client types was failing. Manually defining `import.meta.env` as a workaround.
+declare global {
+  interface ImportMeta {
+    readonly env: {
+      readonly VITE_SUPABASE_URL: string;
+      readonly VITE_SUPABASE_ANON_KEY: string;
+      readonly VITE_USE_MOCK_DATA: string;
+    };
+  }
+}
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;

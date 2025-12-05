@@ -1,11 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import type { Event } from '../../types';
 import { useDataService } from '../../hooks/useDataService';
-import { PlusCircle, Users, Camera, BarChart2, Edit, Share2, Trash2, GalleryVertical, TestTube2 } from 'lucide-react';
+import { PlusCircle, Users, Camera, BarChart2, Edit, Share2, Trash2, GalleryVertical, TestTube2, LogOut } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import CreateEventModal from './CreateEventModal';
 import ShareModal from './ShareModal';
 import { Spinner } from '../common/Spinner';
+import { supabase } from '../../supabaseClient';
 
 const EventCard: React.FC<{ 
     event: Event; 
@@ -145,6 +146,10 @@ export default function HostDashboard({
       await dataService.deleteEvent(eventId);
       fetchEvents(); // Refresh list
   }
+  
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  }
 
   return (
     <>
@@ -159,13 +164,22 @@ export default function HostDashboard({
               <h1 className="text-3xl font-bold text-slate-800">Host Dashboard</h1>
               <p className="text-slate-500 mt-1">Manage your events and see progress in real-time.</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 transition"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Create New Event
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 transition"
+            >
+              <PlusCircle className="w-5 h-5" />
+              Create New Event
+            </button>
+             <button 
+              onClick={handleSignOut}
+              className="p-3 text-slate-600 bg-slate-200 rounded-lg hover:bg-slate-300 transition"
+              aria-label="Sign Out"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {isLoading ? (

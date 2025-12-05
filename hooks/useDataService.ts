@@ -1,5 +1,4 @@
-// FIX: Add Vite client types to resolve import.meta.env error.
-/// <reference types="vite/client" />
+// FIX: Add Vite client types to resolve import.meta.env error. This is now handled globally in supabaseClient.ts.
 import { useMemo } from 'react';
 import { useMockData } from './useMockData';
 import { supabaseService } from '../services/supabaseService';
