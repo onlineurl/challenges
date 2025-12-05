@@ -1,9 +1,12 @@
+// FIX: Add Vite client types to resolve import.meta.env error.
+/// <reference types="vite/client" />
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  // This error will be thrown during the build process if the variables are not set in Vercel.
   throw new Error('Supabase URL and Anon Key must be provided in environment variables.');
 }
 

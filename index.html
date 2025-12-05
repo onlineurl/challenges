@@ -6,39 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Party Challenges</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'event-wedding': '#fef3c7',
-              'event-baby': '#dbeafe',
-              'event-birthday': '#fce7f3',
-              'event-other': '#e5e7eb',
-            },
-            spacing: {
-              'safe-top': 'env(safe-area-inset-top)',
-              'safe-bottom': 'env(safe-area-inset-bottom)',
-              'safe-left': 'env(safe-area-inset-left)',
-              'safe-right': 'env(safe-area-inset-right)',
-            },
-          }
-        }
-      }
-    </script>
-    <style>
-      body {
-        /* Disable pull-to-refresh and other overscroll effects */
-        overscroll-behavior: none;
-        /* Disable text selection to feel more like a native app */
-        user-select: none;
-        -webkit-user-select: none;
-      }
-      /* Apply safe area padding to specific elements */
-      .pt-safe { padding-top: env(safe-area-inset-top); }
-      .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-    </style>
   <script type="importmap">
 {
   "imports": {

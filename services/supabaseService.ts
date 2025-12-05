@@ -5,7 +5,7 @@ import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'da
 
 // Helper for real photo uploads
 const uploadPhotoToStorage = async (eventId: string, participantId: string, photoFile: File): Promise<string> => {
-    const fileExt = photoFile.name.split('.').pop();
+    const fileExt = photoFile.name.split('.').pop() || 'jpg';
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `${eventId}/${participantId}/${fileName}`;
 
@@ -63,9 +63,9 @@ export const supabaseService: IDataService = {
 
   async createEvent(eventData) {
     const { data: { user } } = await supabase.auth.getUser();
-    const host_id = user?.id || "f47ac10b-58cc-4372-a567-0e02b2c3d479"; 
+    if (!user) throw new Error("Host user not found. Please log in.");
 
-    const { error } = await supabase.from('events').insert({ ...eventData, host_id });
+    const { error } = await supabase.from('events').insert({ ...eventData, host_id: user.id });
     if (error) throw new Error(`Event creation failed: ${error.message}`);
   },
 
@@ -134,7 +134,7 @@ export const supabaseService: IDataService = {
       p_name: name
     });
     
-    if (error || !data) {
+    if (error || !data || data.length === 0) {
       throw new Error(error?.message || "Could not create or get participant");
     }
     const participant = data[0] as Participant;
