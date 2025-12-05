@@ -16,8 +16,8 @@ type UploadState = 'idle' | 'previewing' | 'compressing' | 'uploading' | 'verify
 
 const CompressionStats: React.FC<{ original: number; compressed: number; ratio: number }> = ({ original, compressed, ratio }) => (
     <div className="mt-2 text-xs text-center text-slate-500 bg-slate-100 p-2 rounded-lg">
-        <p>Original: <strong>{formatBytes(original)}</strong> | Compressed: <strong>{formatBytes(compressed)}</strong></p>
-        <p>Space Saved: <strong className="text-green-600">{ratio}%</strong></p>
+        <p>Original: <strong>{formatBytes(original)}</strong> | Optimizado: <strong>{formatBytes(compressed)}</strong></p>
+        <p>Ahorro: <strong className="text-green-600">{ratio}%</strong></p>
     </div>
 );
 
@@ -65,7 +65,7 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
       }, 600); // Short delay before celebration
 
     } catch (err) {
-      alert('Failed to process photo. Please try another one.');
+      alert('Error al procesar la foto. Intenta con otra.');
       console.error(err);
       reset();
     }
@@ -86,8 +86,8 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
     return (
         <div className="text-center p-8 bg-green-50 border-2 border-dashed border-green-300 rounded-lg relative overflow-hidden">
             {showConfetti && <Confetti />}
-            <h3 className="text-2xl font-semibold text-green-800">Done!</h3>
-            <p className="mt-1 text-slate-600">Your photo has been submitted. Waiting for the next challenge...</p>
+            <h3 className="text-2xl font-semibold text-green-800">¡Listo!</h3>
+            <p className="mt-1 text-slate-600">Foto enviada. Esperando el siguiente reto...</p>
         </div>
     );
   }
@@ -109,17 +109,17 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
                 {uploadState === 'previewing' ? (
                     <div className="flex gap-2">
                         <button onClick={reset} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-slate-700 bg-slate-200 rounded-lg hover:bg-slate-300 transition">
-                            <RefreshCw className="w-4 h-4"/> Choose Another
+                            <RefreshCw className="w-4 h-4"/> Cambiar
                         </button>
                         <button onClick={handleSubmit} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition">
-                            <Send className="w-4 h-4"/> Submit Photo
+                            <Send className="w-4 h-4"/> Enviar Foto
                         </button>
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center gap-2 text-center h-[54px]">
                         <Spinner />
                         <p className="text-slate-600 font-medium">
-                           {uploadState === 'compressing' ? 'Optimizing photo...' : 'Submitting...'}
+                           {uploadState === 'compressing' ? 'Optimizando foto...' : 'Enviando...'}
                         </p>
                     </div>
                 )}
@@ -142,8 +142,8 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
         className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 rounded-lg text-center hover:border-indigo-500 hover:bg-indigo-50 transition-colors"
       >
         <ImagePlus className="h-12 w-12 text-slate-400" />
-        <span className="mt-2 block text-lg font-semibold text-slate-800">Take or Upload Photo</span>
-        <span className="mt-1 block text-sm text-slate-500">Tap here to open your camera</span>
+        <span className="mt-2 block text-lg font-semibold text-slate-800">Tomar o Subir Foto</span>
+        <span className="mt-1 block text-sm text-slate-500">Toca aquí para abrir la cámara</span>
       </button>
     </>
   );

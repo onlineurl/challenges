@@ -34,7 +34,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
   }, [eventId, dataService]);
 
   const handleKickParticipant = async (participant: Participant) => {
-    if (window.confirm(`Are you sure you want to remove ${participant.name}? All their submissions will be deleted.`)) {
+    if (window.confirm(`¿Estás seguro de eliminar a ${participant.name}? Se borrarán todas sus fotos y puntos.`)) {
         await dataService.deleteParticipant(participant.id);
         fetchData();
     }
@@ -55,17 +55,17 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
 
   const handleShare = () => {
     const top3 = participants.slice(0, 3).map((p, i) => `${['🥇', '🥈', '🥉'][i]} ${p.name} - ${p.total_points} pts`).join('\n');
-    const shareText = `🏆 Leaderboard for "${event?.title}" 🏆\n\n${top3}\n\nCreate your own fun event at Party Challenges!`;
+    const shareText = `🏆 Ranking para "${event?.title}" 🏆\n\n${top3}\n\n¡Crea tu propio evento en ATR!`;
     
     if (navigator.share) {
         navigator.share({
-            title: `Leaderboard for ${event?.title}`,
+            title: `Ranking para ${event?.title}`,
             text: shareText,
             url: window.location.href,
         }).catch(console.error);
     } else {
         navigator.clipboard.writeText(shareText);
-        alert("Results copied to clipboard!");
+        alert("¡Resultados copiados al portapapeles!");
     }
   };
 
@@ -74,7 +74,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
   }
 
   if (!event) {
-    return <div className="p-6 text-center"><h2 className="text-xl font-semibold text-red-600">Event not found!</h2></div>;
+    return <div className="p-6 text-center"><h2 className="text-xl font-semibold text-red-600">¡Evento no encontrado!</h2></div>;
   }
 
   const getTrophy = (rank: number) => {
@@ -92,14 +92,14 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
         <div className="flex items-center gap-4">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-200 transition"><ArrowLeft className="w-6 h-6 text-slate-700" /></button>
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Leaderboard</h1>
-            <p className="text-slate-500 mt-1">Scores for "{event.title}"</p>
+            <h1 className="text-3xl font-bold text-slate-800">Ranking</h1>
+            <p className="text-slate-500 mt-1">Puntajes para "{event.title}"</p>
           </div>
         </div>
-        <button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition shadow-sm"><Share2 className="w-4 h-4"/> Share Results</button>
+        <button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition shadow-sm"><Share2 className="w-4 h-4"/> Compartir</button>
       </div>
       
-       <div className="mb-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg"><div className="flex"><div className="flex-shrink-0"><Info className="h-5 w-5 text-blue-400" /></div><div className="ml-3"><p className="text-sm text-blue-700">In case of a tie in points, the guest with the fastest total completion time ranks higher.</p></div></div></div>
+       <div className="mb-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg"><div className="flex"><div className="flex-shrink-0"><Info className="h-5 w-5 text-blue-400" /></div><div className="ml-3"><p className="text-sm text-blue-700">En caso de empate, gana quien haya tardado menos tiempo total.</p></div></div></div>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <ul className="divide-y divide-slate-200">
@@ -117,7 +117,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
                 <div className="flex items-center gap-1 sm:gap-2">
                     <div className="text-right">
                         <div className="font-bold text-xl sm:text-2xl text-indigo-600">{p.total_points}</div>
-                        <p className="text-xs text-slate-400">Points</p>
+                        <p className="text-xs text-slate-400">Puntos</p>
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity flex">
                       <button onClick={() => handleScoreAdjust(p)} className="p-2 text-slate-500 hover:bg-slate-200 rounded-full"><Settings className="w-4 h-4"/></button>
@@ -127,7 +127,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
               </li>
             ))
           ) : (
-            <li className="p-8 text-center text-slate-500">No participants have joined yet.</li>
+            <li className="p-8 text-center text-slate-500">Aún no hay participantes.</li>
           )}
         </ul>
       </div>

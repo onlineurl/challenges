@@ -92,7 +92,7 @@ export default function ChallengeTimer({ expiresAt, onTimeUp, timeLimit }: Chall
         <span className="font-mono text-3xl font-bold" style={{ color: timerColor }}>
           {timeLeft.total > 0 ? `${timeLeft.minutes.toString().padStart(2, '0')}:${timeLeft.seconds.toString().padStart(2, '0')}` : "00:00"}
         </span>
-         <span className="text-xs text-slate-500">{timeLeft.total > 0 ? "Time Left" : "Time's Up!"}</span>
+         <span className="text-xs text-slate-500">{timeLeft.total > 0 ? "Restante" : "¡Tiempo!"}</span>
       </div>
     </div>
   );

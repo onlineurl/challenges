@@ -66,12 +66,12 @@ export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProp
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 p-1 rounded-full text-slate-500 hover:bg-slate-200"
-          aria-label="Close modal"
+          aria-label="Cerrar modal"
         >
           <X className="w-5 h-5" />
         </button>
         
-        <h2 id="modal-title" className="text-2xl font-bold text-center text-slate-800 mb-4">Share Your Event</h2>
+        <h2 id="modal-title" className="text-2xl font-bold text-center text-slate-800 mb-4">Compartir Evento</h2>
         
         <div className="flex flex-col items-center">
             <div ref={qrRef} className="p-4 bg-white border rounded-lg">
@@ -82,7 +82,7 @@ export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProp
 
         <div className="mt-6 space-y-3">
             <div>
-                <label htmlFor="join-link" className="text-sm font-medium text-slate-600">Event Join Link</label>
+                <label htmlFor="join-link" className="text-sm font-medium text-slate-600">Enlace del Evento</label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                     <input type="text" id="join-link" value={joinUrl} readOnly className="block w-full rounded-none rounded-l-md border-slate-300 bg-slate-50 text-slate-700 sm:text-sm"/>
                     <button
@@ -99,7 +99,7 @@ export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProp
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 text-md font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition"
             >
                 <Download className="w-5 h-5" />
-                Download QR Code
+                Descargar QR
             </button>
         </div>
       </div>

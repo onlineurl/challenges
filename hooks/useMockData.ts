@@ -9,9 +9,9 @@ const DEMO_EVENT_ID = 'evt_demo_0';
 const DEMO_EVENT: Event = {
   id: DEMO_EVENT_ID,
   host_id: 'user_host_1',
-  title: "Interactive Demo Event",
+  title: "Evento Demo ATR",
   type: 'other',
-  description: "Explore the app's features! Join with code DEMO123.",
+  description: "¡Explora las funciones de la app! Únete con el código DEMO123.",
   join_code: 'DEMO123',
   status: 'active',
   is_demo: true,
@@ -28,20 +28,20 @@ const DEMO_EVENT: Event = {
 };
 
 const DEMO_CHALLENGES: Challenge[] = [
-  { id: 'ch_demo_1', event_id: DEMO_EVENT_ID, title: 'Find Something Blue', description: 'Take a photo of the bluest object you can find near you.', difficulty: 'easy', time_limit: 120, points: 10, is_active: true },
-  { id: 'ch_demo_2', event_id: DEMO_EVENT_ID, title: 'Team Selfie', description: 'Get a selfie with at least two other people making funny faces.', difficulty: 'medium', time_limit: 300, points: 20, is_active: true, is_special: true },
-  { id: 'ch_demo_3', event_id: DEMO_EVENT_ID, title: 'Hidden Detail', description: "Photograph a small detail in the room that others might have missed.", difficulty: 'hard', time_limit: 400, points: 30, is_active: true },
+  { id: 'ch_demo_1', event_id: DEMO_EVENT_ID, title: 'Encuentra algo Azul', description: 'Toma una foto del objeto más azul que veas cerca.', difficulty: 'easy', time_limit: 120, points: 10, is_active: true },
+  { id: 'ch_demo_2', event_id: DEMO_EVENT_ID, title: 'Selfie en Equipo', description: 'Hazte una selfie con al menos otras dos personas haciendo caras graciosas.', difficulty: 'medium', time_limit: 300, points: 20, is_active: true, is_special: true },
+  { id: 'ch_demo_3', event_id: DEMO_EVENT_ID, title: 'Detalle Oculto', description: "Fotografía un detalle pequeño de la habitación que otros no hayan visto.", difficulty: 'hard', time_limit: 400, points: 30, is_active: true },
 ];
 
 const DEMO_PARTICIPANTS: Participant[] = [
-    { id: 'part_demo_1', event_id: DEMO_EVENT_ID, name: 'Captain Photo', device_id: 'dev_demo_1', total_points: 30, total_time_taken_seconds: 350, avatar_color: '#3b82f6', avatar_emoji: '😎' },
-    { id: 'part_demo_2', event_id: DEMO_EVENT_ID, name: 'Shutterbug', device_id: 'dev_demo_2', total_points: 10, total_time_taken_seconds: 95, avatar_color: '#10b981', avatar_emoji: '📸' },
-    { id: 'part_demo_3', event_id: DEMO_EVENT_ID, name: 'New Player', device_id: 'dev_demo_3', total_points: 0, total_time_taken_seconds: 0, avatar_color: '#f59e0b', avatar_emoji: '🥳' },
+    { id: 'part_demo_1', event_id: DEMO_EVENT_ID, name: 'Capitán Foto', device_id: 'dev_demo_1', total_points: 30, total_time_taken_seconds: 350, avatar_color: '#3b82f6', avatar_emoji: '😎' },
+    { id: 'part_demo_2', event_id: DEMO_EVENT_ID, name: 'Flash Rápido', device_id: 'dev_demo_2', total_points: 10, total_time_taken_seconds: 95, avatar_color: '#10b981', avatar_emoji: '📸' },
+    { id: 'part_demo_3', event_id: DEMO_EVENT_ID, name: 'Nuevo Jugador', device_id: 'dev_demo_3', total_points: 0, total_time_taken_seconds: 0, avatar_color: '#f59e0b', avatar_emoji: '🥳' },
 ];
 
 const DEMO_COMPLETED: CompletedChallenge[] = [
-    { id: 'comp_demo_1', participant_id: 'part_demo_1', challenge_id: 'ch_demo_3', media_url: 'https://picsum.photos/seed/lamp/400/400', original_filename: 'demo1.jpg', compressed_size: 80000, points_awarded: 30, completed_at: new Date().toISOString(), time_taken_seconds: 350, participant_name: 'Captain Photo', challenge_title: 'Hidden Detail' },
-    { id: 'comp_demo_2', participant_id: 'part_demo_2', challenge_id: 'ch_demo_1', media_url: 'https://picsum.photos/seed/blue-cup/400/400', original_filename: 'demo2.jpg', compressed_size: 65000, points_awarded: 10, completed_at: new Date().toISOString(), time_taken_seconds: 95, participant_name: 'Shutterbug', challenge_title: 'Find Something Blue' },
+    { id: 'comp_demo_1', participant_id: 'part_demo_1', challenge_id: 'ch_demo_3', media_url: 'https://picsum.photos/seed/lamp/400/400', original_filename: 'demo1.jpg', compressed_size: 80000, points_awarded: 30, completed_at: new Date().toISOString(), time_taken_seconds: 350, participant_name: 'Capitán Foto', challenge_title: 'Detalle Oculto' },
+    { id: 'comp_demo_2', participant_id: 'part_demo_2', challenge_id: 'ch_demo_1', media_url: 'https://picsum.photos/seed/blue-cup/400/400', original_filename: 'demo2.jpg', compressed_size: 65000, points_awarded: 10, completed_at: new Date().toISOString(), time_taken_seconds: 95, participant_name: 'Flash Rápido', challenge_title: 'Encuentra algo Azul' },
 ];
 
 const dataStore: {

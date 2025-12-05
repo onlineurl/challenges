@@ -48,54 +48,54 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 p-1 rounded-full text-slate-500 hover:bg-slate-200"
-          aria-label="Close modal"
+          aria-label="Cerrar modal"
         >
           <X className="w-5 h-5" />
         </button>
         
-        <h2 id="modal-title" className="text-2xl font-bold text-slate-800 mb-4">Create a New Event</h2>
+        <h2 id="modal-title" className="text-2xl font-bold text-slate-800 mb-4">Crear Nuevo Evento</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-slate-700">Event Title</label>
+            <label htmlFor="title" className="block text-sm font-medium text-slate-700">Título del Evento</label>
             <input
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              placeholder="e.g., Summer BBQ Bash"
+              placeholder="ej. La Boda de Ana y Juan"
               required
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-slate-700">Description</label>
+            <label htmlFor="description" className="block text-sm font-medium text-slate-700">Descripción</label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               rows={3}
-              placeholder="A short and sweet description of your event."
+              placeholder="Una descripción corta para tus invitados."
             />
           </div>
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-slate-700">Event Type</label>
+            <label htmlFor="type" className="block text-sm font-medium text-slate-700">Tipo de Evento</label>
             <select
               id="type"
               value={type}
               onChange={(e) => setType(e.target.value as EventType)}
               className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             >
-              <option value="other">Other</option>
-              <option value="birthday">Birthday</option>
-              <option value="wedding">Wedding</option>
+              <option value="other">Otro</option>
+              <option value="birthday">Cumpleaños</option>
+              <option value="wedding">Boda</option>
               <option value="baby_shower">Baby Shower</option>
             </select>
           </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                  <label htmlFor="start_time" className="block text-sm font-medium text-slate-700">Start Time (Optional)</label>
+                  <label htmlFor="start_time" className="block text-sm font-medium text-slate-700">Inicio (Opcional)</label>
                   <input
                       type="datetime-local"
                       id="start_time"
@@ -105,7 +105,7 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
                   />
               </div>
               <div>
-                  <label htmlFor="end_time" className="block text-sm font-medium text-slate-700">End Time (Optional)</label>
+                  <label htmlFor="end_time" className="block text-sm font-medium text-slate-700">Fin (Opcional)</label>
                   <input
                       type="datetime-local"
                       id="end_time"
@@ -116,14 +116,14 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
               </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Timer Mode</label>
+            <label className="block text-sm font-medium text-slate-700">Modo de Temporizador</label>
             <div className="mt-2 grid grid-cols-2 gap-3">
               <label className={`relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none ${timerMode === 'individual' ? 'border-indigo-500 ring-2 ring-indigo-500' : 'border-gray-300'}`}>
                 <input type="radio" name="timer-mode" value="individual" className="sr-only" checked={timerMode === 'individual'} onChange={() => setTimerMode('individual')} />
                 <span className="flex flex-1">
                   <span className="flex flex-col">
                     <span className="flex items-center text-sm font-medium text-slate-900"><User className="w-4 h-4 mr-1"/> Individual</span>
-                    <span className="mt-1 flex items-center text-xs text-slate-500">Each guest gets their own timer.</span>
+                    <span className="mt-1 flex items-center text-xs text-slate-500">Cada invitado tiene su propio tiempo.</span>
                   </span>
                 </span>
               </label>
@@ -132,7 +132,7 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
                 <span className="flex flex-1">
                   <span className="flex flex-col">
                     <span className="flex items-center text-sm font-medium text-slate-900"><Users className="w-4 h-4 mr-1"/> Global</span>
-                    <span className="mt-1 flex items-center text-xs text-slate-500">You start one timer for everyone.</span>
+                    <span className="mt-1 flex items-center text-xs text-slate-500">Tú controlas el tiempo para todos.</span>
                   </span>
                 </span>
               </label>
@@ -146,14 +146,14 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-md hover:bg-slate-200"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               disabled={!title.trim()}
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-300"
             >
-              Create Event
+              Crear Evento
             </button>
           </div>
         </form>

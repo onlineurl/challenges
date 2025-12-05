@@ -82,9 +82,9 @@ export default function App() {
   const handleJoinEvent = useCallback(async (joinCode: string, name: string): Promise<{ success: boolean; message: string }> => {
     const { event, reason } = await dataService.findEventByCode(joinCode);
     if (!event) {
-      if (reason === 'not_yet_started') return { success: false, message: 'This event has not started yet. Please try again later.' };
-      if (reason === 'ended') return { success: false, message: 'This event has already ended.' };
-      return { success: false, message: 'Event not found. Please check the code and try again.' };
+      if (reason === 'not_yet_started') return { success: false, message: 'Este evento aún no ha comenzado.' };
+      if (reason === 'ended') return { success: false, message: 'Este evento ya ha terminado.' };
+      return { success: false, message: 'Evento no encontrado. Verifica el código.' };
     }
     try {
       const participant = await dataService.createParticipant(event.id, name);
@@ -92,9 +92,9 @@ export default function App() {
       setCurrentEvent(event);
       localStorage.setItem(SESSION_KEY, JSON.stringify({ participantId: participant.id, eventId: event.id }));
       setView('guest_challenge');
-      return { success: true, message: 'Joined successfully!' };
+      return { success: true, message: '¡Unido exitosamente!' };
     } catch (error) {
-        return { success: false, message: 'There was an error joining the event.' };
+        return { success: false, message: 'Hubo un error al unirse al evento.' };
     }
   }, [dataService]);
 
@@ -120,7 +120,7 @@ export default function App() {
   const renderView = () => {
     if (isLoadingSession) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen"><Spinner size="lg" /><p className="mt-4 text-slate-600">Loading your party...</p></div>
+        <div className="flex flex-col items-center justify-center min-h-screen"><Spinner size="lg" /><p className="mt-4 text-slate-600">Cargando ATR...</p></div>
       );
     }
 
@@ -149,12 +149,13 @@ export default function App() {
           <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
             <div className="text-center">
               <PartyPopper className="mx-auto h-20 w-20 text-indigo-500 animate-bounce" />
-              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl">Party Challenges</h1>
-              <p className="mt-4 max-w-xl mx-auto text-lg text-slate-600">The ultimate game for your social events. Complete photo challenges and create lasting memories!</p>
+              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl">ATR</h1>
+              <h2 className="text-2xl font-bold text-indigo-600 sm:text-3xl">(A Todo Reto)</h2>
+              <p className="mt-4 max-w-xl mx-auto text-lg text-slate-600">El juego definitivo para tus eventos. ¡Completa retos, toma fotos y gana puntos!</p>
             </div>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <button onClick={() => setView('guest_join')} className="w-full sm:w-auto text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 rounded-lg px-8 py-4 transition-transform transform hover:scale-105">Join Event</button>
-              <button onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} className="w-full sm:w-auto text-lg font-semibold text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:ring-4 focus:ring-indigo-200 rounded-lg px-8 py-4 transition-transform transform hover:scale-105">I'm the Host</button>
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
+              <button onClick={() => setView('guest_join')} className="w-full text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-lg">Unirse a Evento</button>
+              <button onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} className="w-full text-lg font-semibold text-indigo-700 bg-white hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-200 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-md border border-indigo-100">Soy Anfitrión</button>
             </div>
           </div>
         );
@@ -167,9 +168,9 @@ export default function App() {
         <header className="p-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10 pt-safe">
           <div className="flex items-center gap-2">
             <PartyPopper className="h-6 w-6 text-indigo-500" />
-            <span className="text-xl font-bold text-slate-800">Party Challenges</span>
+            <span className="text-xl font-bold text-slate-800">ATR</span>
           </div>
-          <button onClick={navigateHome} className="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Go to home page"><Home className="h-5 w-5 text-slate-600"/><span className="sr-only">Go Home</span></button>
+          <button onClick={navigateHome} className="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Ir al inicio"><Home className="h-5 w-5 text-slate-600"/><span className="sr-only">Inicio</span></button>
         </header>
       )}
       {renderView()}

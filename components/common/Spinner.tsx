@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface SpinnerProps {
@@ -19,7 +18,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ size = 'md', color = 'border-b
       className={`animate-spin rounded-full border-solid border-t-transparent ${sizeClasses[size]} ${color} ${className}`}
       role="status"
     >
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">Cargando...</span>
     </div>
   );
 };

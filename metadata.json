@@ -1,6 +1,6 @@
 {
-  "name": "ATR Party - A Todo Reto",
-  "description": "A Progressive Web App for social events (baby showers, weddings, birthdays) where guests complete time-limited photo challenges. The host manages the event and can view all submitted photos.",
+  "name": "ATR (A Todo Reto)",
+  "description": "Una PWA para eventos sociales (bodas, cumpleaños, fiestas) donde los invitados completan retos fotográficos contrarreloj.",
   "requestFramePermissions": [
     "camera"
   ]

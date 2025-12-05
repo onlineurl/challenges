@@ -19,7 +19,7 @@ const ChallengeCard: React.FC<{
 }> = ({ challenge, onStartGlobal, onDelete, onEdit, isGlobalMode }) => {
     
     const handleDelete = () => {
-        if(window.confirm(`Are you sure you want to delete the challenge "${challenge.title}"?`)) {
+        if(window.confirm(`¿Estás seguro de borrar el reto "${challenge.title}"?`)) {
             onDelete(challenge.id);
         }
     }
@@ -33,7 +33,9 @@ const ChallengeCard: React.FC<{
                 </div>
                 <p className="text-sm text-slate-500 mt-1 max-w-prose">{challenge.description}</p>
                 <div className="flex items-center gap-4 mt-2 text-xs text-slate-600">
-                    <span className="font-bold capitalize px-2 py-0.5 rounded-full bg-slate-100">{challenge.difficulty}</span>
+                    <span className="font-bold capitalize px-2 py-0.5 rounded-full bg-slate-100">
+                        {challenge.difficulty === 'easy' ? 'Fácil' : challenge.difficulty === 'medium' ? 'Media' : 'Difícil'}
+                    </span>
                     <span>{challenge.points}pts</span>
                     <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {challenge.time_limit}s</span>
                 </div>
@@ -45,16 +47,16 @@ const ChallengeCard: React.FC<{
                         className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-lg hover:bg-green-200 transition"
                     >
                         <PlayCircle className="w-4 h-4" />
-                        <span className="hidden sm:inline">Start</span>
+                        <span className="hidden sm:inline">Iniciar</span>
                     </button>
                 )}
                  <button onClick={() => onEdit(challenge)} className="p-2 text-slate-600 hover:bg-slate-200 rounded-full transition">
                     <Edit className="w-4 h-4" />
-                    <span className="sr-only">Edit Challenge</span>
+                    <span className="sr-only">Editar Reto</span>
                 </button>
                  <button onClick={handleDelete} className="p-2 text-red-600 hover:bg-red-100 rounded-full transition">
                     <Trash2 className="w-4 h-4" />
-                    <span className="sr-only">Delete Challenge</span>
+                    <span className="sr-only">Borrar Reto</span>
                 </button>
             </div>
         </li>
@@ -111,7 +113,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
   }
 
   const handleStartGlobal = async (challengeId: string) => {
-    if (confirm("Are you sure you want to start this challenge for everyone? This will replace any current global challenge.")) {
+    if (confirm("¿Seguro que quieres iniciar este reto para todos? Reemplazará el reto global actual.")) {
         await dataService.startGlobalChallenge(eventId, challengeId);
         fetchData();
     }
@@ -122,7 +124,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
   }
 
   if (!event) {
-    return <div className="p-6 text-center"><h2 className="text-xl font-semibold text-red-600">Event not found!</h2></div>;
+    return <div className="p-6 text-center"><h2 className="text-xl font-semibold text-red-600">¡Evento no encontrado!</h2></div>;
   }
   
   const isGlobalMode = event.config.timer_mode === 'global';
@@ -142,16 +144,16 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
             <ArrowLeft className="w-6 h-6 text-slate-700" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Manage Challenges</h1>
-            <p className="text-slate-500 mt-1">For "{event.title}"</p>
+            <h1 className="text-3xl font-bold text-slate-800">Gestionar Retos</h1>
+            <p className="text-slate-500 mt-1">Para "{event.title}"</p>
           </div>
         </div>
 
         {isGlobalMode && (
             <div className="mb-6 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-800 rounded-r-lg">
-                <h4 className="font-bold">Global Timer Mode is Active</h4>
-                <p className="text-sm">Click the "Start" button on a challenge to begin the countdown for all participants simultaneously.</p>
-                {currentGlobalChallenge && <p className="text-sm mt-2"><b>Current Active Challenge:</b> {currentGlobalChallenge.title}</p>}
+                <h4 className="font-bold">Modo Global Activo</h4>
+                <p className="text-sm">Presiona "Iniciar" en un reto para comenzar el contador para todos simultáneamente.</p>
+                {currentGlobalChallenge && <p className="text-sm mt-2"><b>Reto Activo:</b> {currentGlobalChallenge.title}</p>}
             </div>
         )}
         
@@ -161,7 +163,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
                 className="flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 transition"
             >
                 <PlusCircle className="w-5 h-5" />
-                Add Challenge
+                Añadir Reto
             </button>
         </div>
         
@@ -180,7 +182,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
               ))
             ) : (
               <li className="p-8 text-center text-slate-500 bg-white rounded-lg shadow-sm">
-                No challenges created for this event yet. Add one to get started!
+                No hay retos creados aún. ¡Añade uno para empezar!
               </li>
             )}
           </ul>

@@ -14,7 +14,7 @@ const uploadPhotoToStorage = async (eventId: string, participantId: string, phot
         .upload(filePath, photoFile);
 
     if (uploadError) {
-        throw new Error(`Storage upload failed: ${uploadError.message}`);
+        throw new Error(`Error subiendo archivo: ${uploadError.message}`);
     }
 
     const { data } = supabase.storage
@@ -22,7 +22,7 @@ const uploadPhotoToStorage = async (eventId: string, participantId: string, phot
         .getPublicUrl(filePath);
 
     if (!data.publicUrl) {
-        throw new Error('Failed to get public URL for uploaded photo.');
+        throw new Error('Error al obtener URL pública de la imagen.');
     }
     
     return data.publicUrl;
@@ -63,7 +63,7 @@ export const supabaseService: IDataService = {
 
   async createEvent(eventData: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; }) {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Host user not found. Please log in.");
+    if (!user) throw new Error("Usuario no encontrado. Por favor inicia sesión.");
 
     const joinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
@@ -89,15 +89,15 @@ export const supabaseService: IDataService = {
     if (error) {
         if (error.code === '23505') { 
             // In a real app, you might retry with a new code. For now, just error out.
-            throw new Error(`Event creation failed: Could not generate a unique join code. Please try again.`);
+            throw new Error(`Error creando evento: No se pudo generar un código único. Intenta de nuevo.`);
         }
-        throw new Error(`Event creation failed: ${error.message}`);
+        throw new Error(`Error creando evento: ${error.message}`);
     }
   },
 
   async deleteEvent(eventId: string) {
     const { error } = await supabase.from('events').delete().eq('id', eventId);
-    if (error) throw new Error(`Event deletion failed: ${error.message}`);
+    if (error) throw new Error(`Error borrando evento: ${error.message}`);
   },
 
   async startGlobalChallenge(eventId, challengeId) {
@@ -108,7 +108,7 @@ export const supabaseService: IDataService = {
          current_global_challenge_id: challengeId,
          global_challenge_expires_at: expiresAt
      }).eq('id', eventId);
-     if (error) throw new Error(`Start global challenge failed: ${error.message}`);
+     if (error) throw new Error(`Error iniciando reto global: ${error.message}`);
   },
 
   // --- Challenges ---
@@ -126,17 +126,17 @@ export const supabaseService: IDataService = {
 
   async addChallengeToEvent(eventId, challengeData) {
       const { error } = await supabase.from('challenges').insert({ ...challengeData, event_id: eventId });
-      if (error) throw new Error(`Add challenge failed: ${error.message}`);
+      if (error) throw new Error(`Error añadiendo reto: ${error.message}`);
   },
   
   async updateChallenge(challengeId, challengeData) {
       const { error } = await supabase.from('challenges').update(challengeData).eq('id', challengeId);
-      if (error) throw new Error(`Update challenge failed: ${error.message}`);
+      if (error) throw new Error(`Error actualizando reto: ${error.message}`);
   },
 
   async deleteChallenge(challengeId: string) {
       const { error } = await supabase.from('challenges').delete().eq('id', challengeId);
-      if (error) throw new Error(`Delete challenge failed: ${error.message}`);
+      if (error) throw new Error(`Error borrando reto: ${error.message}`);
   },
 
   // --- Participants ---
@@ -161,7 +161,7 @@ export const supabaseService: IDataService = {
     });
     
     if (error || !data || data.length === 0) {
-      throw new Error(error?.message || "Could not create or get participant");
+      throw new Error(error?.message || "No se pudo crear o recuperar el participante");
     }
     const participant = data[0] as Participant;
 
@@ -178,12 +178,12 @@ export const supabaseService: IDataService = {
   
   async deleteParticipant(participantId: string): Promise<void> {
     const { error } = await supabase.from('participants').delete().eq('id', participantId);
-    if (error) throw new Error(`Delete participant failed: ${error.message}`);
+    if (error) throw new Error(`Error borrando participante: ${error.message}`);
   },
 
   async updateParticipantScore(participantId: string, pointsToAdd: number): Promise<void> {
     const { error } = await supabase.rpc('adjust_manual_score', { p_id: participantId, points_to_add: pointsToAdd });
-    if (error) throw new Error(`Adjust score failed: ${error.message}`);
+    if (error) throw new Error(`Error ajustando puntaje: ${error.message}`);
   },
 
   // --- Completed Challenges ---
@@ -196,7 +196,7 @@ export const supabaseService: IDataService = {
   async completeChallenge(participantId, challengeId, photoFile, compressedSize) {
       const participant = await this.getParticipant(participantId);
       const challenge = await this.getChallenge(challengeId);
-      if(!participant || !challenge) throw new Error("Participant or challenge not found");
+      if(!participant || !challenge) throw new Error("Participante o reto no encontrado");
 
       const publicUrl = await uploadPhotoToStorage(participant.event_id, participantId, photoFile);
       
@@ -215,7 +215,7 @@ export const supabaseService: IDataService = {
           time_taken_seconds: timeTaken,
       });
 
-      if (completeError) throw new Error(`Saving submission failed: ${completeError.message}`);
+      if (completeError) throw new Error(`Error guardando entrega: ${completeError.message}`);
 
       await supabase.rpc('update_participant_score', {
         p_id: participantId,
@@ -228,6 +228,6 @@ export const supabaseService: IDataService = {
 
   async deleteChallengeSubmission(submissionId: string): Promise<void> {
       const { error } = await supabase.rpc('reject_submission', { submission_id: submissionId });
-      if (error) throw new Error(`Reject submission failed: ${error.message}`);
+      if (error) throw new Error(`Error rechazando entrega: ${error.message}`);
   },
 };
