@@ -11,7 +11,8 @@ interface ShareModalProps {
 export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
-  const joinUrl = `${window.location.origin}/join?code=${joinCode}`;
+  // Fixed: Removed /join path to prevent 404s on single-page app hosting
+  const joinUrl = `${window.location.origin}/?code=${joinCode}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(joinUrl);

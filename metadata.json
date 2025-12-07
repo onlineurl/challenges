@@ -1,5 +1,5 @@
 {
-  "name": "ATR (A Todo Reto)",
+  "name": "ATR Party (A Todo Reto)",
   "description": "Una PWA para eventos sociales (bodas, cumpleaños, fiestas) donde los invitados completan retos fotográficos contrarreloj.",
   "requestFramePermissions": [
     "camera"

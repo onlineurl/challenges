@@ -75,7 +75,7 @@ const EventCard: React.FC<{
                         <p className="mt-1 text-xs text-slate-500 capitalize">Modo Temporizador: {event.config.timer_mode === 'global' ? 'Global' : 'Individual'}</p>
                     </div>
                      <div className="text-center bg-white/70 p-3 rounded-lg self-start flex flex-col items-center">
-                        <QRCodeSVG value={`${window.location.origin}/join?code=${event.join_code}`} size={80} />
+                        <QRCodeSVG value={`${window.location.origin}/?code=${event.join_code}`} size={80} />
                         <p className="mt-2 font-mono text-xl font-bold tracking-widest text-slate-700">{event.join_code}</p>
                         <button onClick={() => setIsShareModalOpen(true)} className="mt-2 flex items-center gap-1 text-xs text-indigo-600 hover:underline">
                             <Share2 className="w-3 h-3"/> Compartir
@@ -119,7 +119,7 @@ const EventCard: React.FC<{
 
 export default function HostDashboard({ 
     onViewLeaderboard, 
-    onManageChallenges,
+    onManageChallenges, 
     onViewGallery
 }: { 
     onViewLeaderboard: (eventId: string) => void; 

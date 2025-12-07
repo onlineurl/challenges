@@ -120,7 +120,7 @@ export default function App() {
   const renderView = () => {
     if (isLoadingSession) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen"><Spinner size="lg" /><p className="mt-4 text-slate-600">Cargando ATR...</p></div>
+        <div className="flex flex-col items-center justify-center min-h-screen"><Spinner size="lg" /><p className="mt-4 text-slate-600">Cargando ATR Party...</p></div>
       );
     }
 
@@ -149,7 +149,7 @@ export default function App() {
           <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
             <div className="text-center">
               <PartyPopper className="mx-auto h-20 w-20 text-indigo-500 animate-bounce" />
-              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl">ATR</h1>
+              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl">ATR Party</h1>
               <h2 className="text-2xl font-bold text-indigo-600 sm:text-3xl">(A Todo Reto)</h2>
               <p className="mt-4 max-w-xl mx-auto text-lg text-slate-600">El juego definitivo para tus eventos. ¡Completa retos, toma fotos y gana puntos!</p>
             </div>
@@ -168,7 +168,7 @@ export default function App() {
         <header className="p-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10 pt-safe">
           <div className="flex items-center gap-2">
             <PartyPopper className="h-6 w-6 text-indigo-500" />
-            <span className="text-xl font-bold text-slate-800">ATR</span>
+            <span className="text-xl font-bold text-slate-800">ATR Party</span>
           </div>
           <button onClick={navigateHome} className="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Ir al inicio"><Home className="h-5 w-5 text-slate-600"/><span className="sr-only">Inicio</span></button>
         </header>

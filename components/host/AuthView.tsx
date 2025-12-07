@@ -9,7 +9,7 @@ export default function AuthView() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
             <PartyPopper className="mx-auto h-12 w-12 text-indigo-500" />
-            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800">ATR - Anfitrión</h1>
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800">ATR Party - Anfitrión</h1>
             <p className="mt-2 text-md text-slate-600">Inicia sesión o regístrate para gestionar tus eventos.</p>
         </div>
         <div className="bg-white p-8 rounded-2xl shadow-lg">
