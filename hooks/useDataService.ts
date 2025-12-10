@@ -1,10 +1,8 @@
-// FIX: Add Vite client types to resolve import.meta.env error. This is now handled globally in supabaseClient.ts.
 import { useMemo } from 'react';
 import { useMockData } from './useMockData';
 import { supabaseService } from '../services/supabaseService';
 import type { IDataService } from '../services/IDataService';
 
-// Vite exposes env variables on `import.meta.env`
 const useMock = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 export function useDataService(): IDataService {

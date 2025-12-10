@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import type { EventType, TimerMode } from '../../types';
-import { X, User, Users } from 'lucide-react';
+import { X, User, Users, KeyRound } from 'lucide-react';
 
 interface CreateEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (data: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; }) => void;
+  onCreate: (data: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; access_code: string; }) => void;
 }
 
 export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEventModalProps) {
@@ -15,12 +15,21 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
   const [timerMode, setTimerMode] = useState<TimerMode>('individual');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [accessCode, setAccessCode] = useState('');
 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title.trim()) {
-      onCreate({ title, description, type, timer_mode: timerMode, start_time: startTime || undefined, end_time: endTime || undefined });
+    if (title.trim() && accessCode.trim()) {
+      onCreate({ 
+          title, 
+          description, 
+          type, 
+          timer_mode: timerMode, 
+          start_time: startTime || undefined, 
+          end_time: endTime || undefined,
+          access_code: accessCode.trim()
+      });
       // Reset form
       setTitle('');
       setDescription('');
@@ -28,6 +37,7 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
       setTimerMode('individual');
       setStartTime('');
       setEndTime('');
+      setAccessCode('');
     }
   };
 
@@ -56,6 +66,23 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
         <h2 id="modal-title" className="text-2xl font-bold text-slate-800 mb-4">Crear Nuevo Evento</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          
+          <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+             <label htmlFor="access_code" className="block text-sm font-bold text-indigo-900 flex items-center gap-2">
+                <KeyRound className="w-4 h-4"/> Código de Licencia
+             </label>
+             <p className="text-xs text-indigo-700 mb-2">Ingresa el código que compraste para activar este evento.</p>
+             <input
+                type="text"
+                id="access_code"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+                className="block w-full rounded-md border-indigo-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 uppercase tracking-widest font-mono"
+                placeholder="ATR-XXXX-XXXX"
+                required
+              />
+          </div>
+
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-slate-700">Título del Evento</label>
             <input
@@ -150,10 +177,10 @@ export default function CreateEventModal({ isOpen, onClose, onCreate }: CreateEv
             </button>
             <button
               type="submit"
-              disabled={!title.trim()}
+              disabled={!title.trim() || !accessCode.trim()}
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-300"
             >
-              Crear Evento
+              Canjear y Crear
             </button>
           </div>
         </form>

@@ -52,6 +52,9 @@ const EventCard: React.FC<{
         }
     };
     
+    // Robust URL construction
+    const joinUrl = `${window.location.protocol}//${window.location.host}/?code=${event.join_code}`;
+
     return (
         <>
             <ShareModal 
@@ -75,7 +78,7 @@ const EventCard: React.FC<{
                         <p className="mt-1 text-xs text-slate-500 capitalize">Modo Temporizador: {event.config.timer_mode === 'global' ? 'Global' : 'Individual'}</p>
                     </div>
                      <div className="text-center bg-white/70 p-3 rounded-lg self-start flex flex-col items-center">
-                        <QRCodeSVG value={`${window.location.origin}/?code=${event.join_code}`} size={80} />
+                        <QRCodeSVG value={joinUrl} size={80} includeMargin={true} />
                         <p className="mt-2 font-mono text-xl font-bold tracking-widest text-slate-700">{event.join_code}</p>
                         <button onClick={() => setIsShareModalOpen(true)} className="mt-2 flex items-center gap-1 text-xs text-indigo-600 hover:underline">
                             <Share2 className="w-3 h-3"/> Compartir
@@ -143,14 +146,15 @@ export default function HostDashboard({
       fetchEvents();
   }, [dataService]);
 
-  const handleCreateEvent = async (data: { title: string; description: string; type: Event['type']; timer_mode: Event['config']['timer_mode']; start_time?: string; end_time?: string; }) => {
+  const handleCreateEvent = async (data: { title: string; description: string; type: Event['type']; timer_mode: Event['config']['timer_mode']; start_time?: string; end_time?: string; access_code: string; }) => {
     try {
       await dataService.createEvent(data);
       setIsModalOpen(false);
       fetchEvents(); // Refresh list on success
+      alert("¡Evento activado y creado exitosamente!");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error desconocido.';
-      alert(`Error al crear evento: ${errorMessage}\n\nPor favor verifica tu conexión. Si el problema persiste, contacta soporte.`);
+      alert(`Error al crear evento: ${errorMessage}\n\nVerifica que tu código de licencia sea válido y no haya sido usado.`);
     }
   }
 

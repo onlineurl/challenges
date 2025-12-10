@@ -74,4 +74,5 @@ export interface CompletedChallenge {
   // Enriched data for gallery
   participant_name: string;
   challenge_title: string;
+  status?: 'valid' | 'rejected'; // Added for soft delete logic
 }

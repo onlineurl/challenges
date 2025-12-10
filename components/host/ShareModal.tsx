@@ -11,8 +11,9 @@ interface ShareModalProps {
 export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
-  // Fixed: Removed /join path to prevent 404s on single-page app hosting
-  const joinUrl = `${window.location.origin}/?code=${joinCode}`;
+  
+  // Robust URL construction
+  const joinUrl = `${window.location.protocol}//${window.location.host}/?code=${joinCode}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(joinUrl);
@@ -33,15 +34,19 @@ export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProp
     
     const img = new Image();
     img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
+        const padding = 20;
+        canvas.width = img.width + padding * 2;
+        canvas.height = img.height + padding * 2;
+        
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+        
+        ctx.drawImage(img, padding, padding);
+        
         const pngFile = canvas.toDataURL('image/png');
         
         const downloadLink = document.createElement('a');
-        downloadLink.download = `qrcode-event-${joinCode}.png`;
+        downloadLink.download = `ATR-Party-${joinCode}.png`;
         downloadLink.href = pngFile;
         downloadLink.click();
     };
@@ -75,8 +80,8 @@ export default function ShareModal({ isOpen, onClose, joinCode }: ShareModalProp
         <h2 id="modal-title" className="text-2xl font-bold text-center text-slate-800 mb-4">Compartir Evento</h2>
         
         <div className="flex flex-col items-center">
-            <div ref={qrRef} className="p-4 bg-white border rounded-lg">
-                <QRCodeSVG value={joinUrl} size={192} />
+            <div ref={qrRef} className="p-4 bg-white border rounded-lg shadow-inner">
+                <QRCodeSVG value={joinUrl} size={192} includeMargin={true} level="M" />
             </div>
             <p className="mt-4 font-mono text-3xl font-bold tracking-widest text-slate-700">{joinCode}</p>
         </div>

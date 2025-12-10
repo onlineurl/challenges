@@ -1,20 +1,10 @@
-// FIX: The reference to vite/client types was failing. Manually defining `import.meta.env` as a workaround.
-declare global {
-  interface ImportMeta {
-    readonly env: {
-      readonly VITE_SUPABASE_URL: string;
-      readonly VITE_SUPABASE_ANON_KEY: string;
-      readonly VITE_USE_MOCK_DATA: string;
-    };
-  }
-}
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  // This error will be thrown during the build process if the variables are not set in Vercel.
+  // This error will be thrown during the build process if the variables are not set.
   throw new Error('Supabase URL and Anon Key must be provided in environment variables.');
 }
 

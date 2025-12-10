@@ -6,15 +6,16 @@ import ChallengeView from './components/guest/ChallengeView';
 import Leaderboard from './components/host/Leaderboard';
 import ChallengeManager from './components/host/ChallengeManager';
 import PhotoGallery from './components/host/PhotoGallery';
+import AdminDashboard from './components/admin/AdminDashboard';
 import { useDataService } from './hooks/useDataService';
 import type { Participant, Event } from './types';
-import { Home, PartyPopper } from 'lucide-react';
+import { Home, PartyPopper, ShieldAlert } from 'lucide-react';
 import { Spinner } from './components/common/Spinner';
 import { supabase } from './supabaseClient';
 import AuthView from './components/host/AuthView';
 
 
-type View = 'home' | 'host_auth' | 'host_dashboard' | 'guest_join' | 'guest_challenge' | 'leaderboard' | 'challenge_manager' | 'photo_gallery';
+type View = 'home' | 'host_auth' | 'host_dashboard' | 'guest_join' | 'guest_challenge' | 'leaderboard' | 'challenge_manager' | 'photo_gallery' | 'admin_dashboard';
 
 const SESSION_KEY = 'party-challenges-session';
 
@@ -26,10 +27,17 @@ export default function App() {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [initialJoinCode, setInitialJoinCode] = useState<string | null>(null);
+  const [showAdminEntry, setShowAdminEntry] = useState(false);
   
   const dataService = useDataService();
 
   useEffect(() => {
+    // Check for secret admin url param
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('adminadmin') === 'true') {
+        setShowAdminEntry(true);
+    }
+
     // Handle host authentication state
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -135,6 +143,8 @@ export default function App() {
         return <ChallengeManager eventId={selectedEventId!} onBack={() => setView('host_dashboard')} />;
       case 'photo_gallery':
         return <PhotoGallery eventId={selectedEventId!} onBack={() => setView('host_dashboard')} />;
+      case 'admin_dashboard':
+        return <AdminDashboard onBack={() => setView('home')} />;
       case 'guest_join':
         return <JoinScreen onJoin={handleJoinEvent} initialCode={initialJoinCode} />;
       case 'guest_challenge':
@@ -157,6 +167,11 @@ export default function App() {
               <button onClick={() => setView('guest_join')} className="w-full text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-lg">Unirse a Evento</button>
               <button onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} className="w-full text-lg font-semibold text-indigo-700 bg-white hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-200 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-md border border-indigo-100">Soy Anfitrión</button>
             </div>
+            {showAdminEntry && (
+                 <button onClick={() => setView('admin_dashboard')} className="mt-8 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition">
+                    <ShieldAlert className="w-4 h-4" /> Acceso Super Admin
+                 </button>
+            )}
           </div>
         );
     }
@@ -164,7 +179,7 @@ export default function App() {
 
   return (
     <main className="max-w-4xl mx-auto font-sans bg-slate-100 min-h-[100dvh]">
-      {view !== 'home' && view !== 'host_auth' && (
+      {view !== 'home' && view !== 'host_auth' && view !== 'admin_dashboard' && (
         <header className="p-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10 pt-safe">
           <div className="flex items-center gap-2">
             <PartyPopper className="h-6 w-6 text-indigo-500" />

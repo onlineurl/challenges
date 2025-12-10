@@ -1,5 +1,5 @@
 import { supabase } from '../supabaseClient';
-import type { IDataService } from './IDataService';
+import type { IDataService, AdminAccessCode } from './IDataService';
 import type { Event, Challenge, Participant, CompletedChallenge, NewChallenge, EventType, TimerMode } from '../types';
 import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'date-fns';
 
@@ -30,6 +30,19 @@ const uploadPhotoToStorage = async (eventId: string, participantId: string, phot
 
 
 export const supabaseService: IDataService = {
+  // --- Admin ---
+  async getAdminAccessCodes(): Promise<AdminAccessCode[]> {
+    const { data, error } = await supabase.rpc('get_admin_access_codes');
+    if (error) throw new Error(error.message);
+    return data as AdminAccessCode[];
+  },
+
+  async generateAccessCode(prefix: string): Promise<string> {
+    const { data, error } = await supabase.rpc('generate_access_code', { prefix });
+    if (error) throw new Error(error.message);
+    return data as string;
+  },
+
   // --- Events ---
   async getEvents(): Promise<Event[]> {
     const { data, error } = await supabase.from('events').select('*');
@@ -61,37 +74,34 @@ export const supabaseService: IDataService = {
     return { event };
   },
 
-  async createEvent(eventData: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; }) {
+  async createEvent(eventData: { title: string; description: string; type: EventType; timer_mode: TimerMode; start_time?: string; end_time?: string; access_code: string; }) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Usuario no encontrado. Por favor inicia sesión.");
 
     const joinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    const newEventPayload = {
-      host_id: user.id,
-      title: eventData.title,
-      description: eventData.description,
-      type: eventData.type,
-      start_time: eventData.start_time,
-      end_time: eventData.end_time,
-      join_code: joinCode,
-      config: {
+    // Use the Secure RPC function to validate the code and create the event
+    const { error } = await supabase.rpc('create_event_with_code', {
+      p_title: eventData.title,
+      p_description: eventData.description,
+      p_type: eventData.type,
+      p_timer_mode: eventData.timer_mode,
+      p_start_time: eventData.start_time || null,
+      p_end_time: eventData.end_time || null,
+      p_config: {
         timePerChallenge: 300,
         maxParticipants: 50,
         autoAssign: true,
         points: { easy: 10, medium: 20, hard: 30 },
         compression: { quality: 0.8, maxWidth: 1200 },
         timer_mode: eventData.timer_mode,
-      }
-    };
+      },
+      p_join_code: joinCode,
+      p_access_code: eventData.access_code.toUpperCase()
+    });
 
-    const { error } = await supabase.from('events').insert(newEventPayload);
     if (error) {
-        if (error.code === '23505') { 
-            // In a real app, you might retry with a new code. For now, just error out.
-            throw new Error(`Error creando evento: No se pudo generar un código único. Intenta de nuevo.`);
-        }
-        throw new Error(`Error creando evento: ${error.message}`);
+        throw new Error(error.message);
     }
   },
 
@@ -190,7 +200,9 @@ export const supabaseService: IDataService = {
   async getCompletedForEvent(eventId: string): Promise<CompletedChallenge[]> {
     const { data, error } = await supabase.rpc('get_gallery_for_event', { event_id_to_check: eventId });
     if (error) return [];
-    return data as CompletedChallenge[];
+    
+    // Client-side filtering just in case RPC returns rejected ones
+    return (data as CompletedChallenge[]).filter(c => c.status !== 'rejected');
   },
 
   async completeChallenge(participantId, challengeId, photoFile, compressedSize) {
@@ -213,6 +225,7 @@ export const supabaseService: IDataService = {
           compressed_size: compressedSize,
           points_awarded: challenge.points,
           time_taken_seconds: timeTaken,
+          status: 'valid'
       });
 
       if (completeError) throw new Error(`Error guardando entrega: ${completeError.message}`);
@@ -227,7 +240,8 @@ export const supabaseService: IDataService = {
   },
 
   async deleteChallengeSubmission(submissionId: string): Promise<void> {
-      const { error } = await supabase.rpc('reject_submission', { submission_id: submissionId });
+      // Use soft_reject_submission instead of delete or plain reject
+      const { error } = await supabase.rpc('soft_reject_submission', { submission_id: submissionId });
       if (error) throw new Error(`Error rechazando entrega: ${error.message}`);
   },
 };
