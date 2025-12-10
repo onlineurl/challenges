@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Event, Challenge, Participant, CompletedChallenge, EventType, NewChallenge, TimerMode, EventStatus } from '../types';
+import type { Event, Challenge, Participant, CompletedChallenge } from '../types';
 import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'date-fns';
 import type { IDataService, AdminAccessCode } from '../services/IDataService';
 

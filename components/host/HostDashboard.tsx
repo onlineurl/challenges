@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Event } from '../../types';
 import { useDataService } from '../../hooks/useDataService';
 import { PlusCircle, Users, Camera, BarChart2, Edit, Share2, Trash2, GalleryVertical, TestTube2, LogOut } from 'lucide-react';

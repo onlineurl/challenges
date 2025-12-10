@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDataService } from '../../hooks/useDataService';
 import type { Event, Participant } from '../../types';
 import { ArrowLeft, Trophy, Info, Settings, Trash2, Share2 } from 'lucide-react';

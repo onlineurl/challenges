@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDataService } from '../../hooks/useDataService';
 import { supabase } from '../../supabaseClient';
 import type { Session } from '@supabase/supabase-js';
@@ -21,7 +21,7 @@ interface AdminAccessCode {
 
 // ⚠️ IMPORTANT: Add your email here to allow access to the UI.
 const ALLOWED_ADMIN_EMAILS = [
-    'apixelarte@gmail.com', // CAMBIA ESTO POR TU EMAIL REAL
+    'tu_email@ejemplo.com', // CAMBIA ESTO POR TU EMAIL REAL
     'admin@atrparty.com'
 ];
 

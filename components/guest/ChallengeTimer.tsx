@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { differenceInSeconds } from 'date-fns';
-import { Clock } from 'lucide-react';
 
 interface ChallengeTimerProps {
   expiresAt: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Participant, Event, Challenge } from '../../types';
 import { useDataService } from '../../hooks/useDataService';
 import ChallengeTimer from './ChallengeTimer';

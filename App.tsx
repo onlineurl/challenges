@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import HostDashboard from './components/host/HostDashboard';
 import JoinScreen from './components/guest/JoinScreen';

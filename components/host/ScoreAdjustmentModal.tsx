@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Participant } from '../../types';
 import { X } from 'lucide-react';
 

@@ -1,6 +1,6 @@
 import { supabase } from '../supabaseClient';
 import type { IDataService, AdminAccessCode } from './IDataService';
-import type { Event, Challenge, Participant, CompletedChallenge, NewChallenge, EventType, TimerMode } from '../types';
+import type { Event, Challenge, Participant, CompletedChallenge, EventType, TimerMode } from '../types';
 import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'date-fns';
 
 // Helper for real photo uploads
