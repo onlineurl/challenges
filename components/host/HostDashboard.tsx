@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Event } from '../../types';
 import { useDataService } from '../../hooks/useDataService';
-import { PlusCircle, Users, Camera, BarChart2, Edit, Share2, Trash2, GalleryVertical, TestTube2, LogOut } from 'lucide-react';
+import { PlusCircle, Users, Camera, BarChart2, Edit, Share2, Trash2, GalleryVertical, LogOut } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import CreateEventModal from './CreateEventModal';
 import ShareModal from './ShareModal';
@@ -43,10 +43,6 @@ const EventCard: React.FC<{
     };
     
     const handleDelete = () => {
-        if (event.is_demo) {
-            alert("El evento demo no se puede eliminar.");
-            return;
-        }
         if (window.confirm(`¿Estás seguro de que quieres eliminar el evento "${event.title}"? Esta acción es permanente y borrará todos los datos asociados.`)) {
             onDelete(event.id);
         }
@@ -67,11 +63,6 @@ const EventCard: React.FC<{
                     <div>
                         <div className="flex items-center gap-3">
                             <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{eventTypeName[event.type]}</p>
-                            {event.is_demo && (
-                                <span className="flex items-center gap-1 text-xs font-bold text-purple-800 bg-purple-200 px-2 py-0.5 rounded-full">
-                                    <TestTube2 className="w-3 h-3"/> DEMO
-                                </span>
-                            )}
                         </div>
                         <h3 className="text-2xl font-bold text-slate-800">{event.title}</h3>
                         <p className="mt-2 text-slate-600">{event.description}</p>
@@ -109,7 +100,7 @@ const EventCard: React.FC<{
                             <BarChart2 className="w-4 h-4" />
                             Ranking
                         </button>
-                        <button onClick={handleDelete} className="p-2 text-red-600 hover:bg-red-100 rounded-full transition disabled:text-slate-400 disabled:hover:bg-transparent" disabled={event.is_demo}>
+                        <button onClick={handleDelete} className="p-2 text-red-600 hover:bg-red-100 rounded-full transition">
                             <Trash2 className="w-4 h-4" />
                             <span className="sr-only">Eliminar Evento</span>
                         </button>
@@ -203,7 +194,8 @@ export default function HostDashboard({
         ) : (
             <div className="space-y-6">
             {events.length > 0 ? (
-                [...events].sort((a,b) => (a.is_demo ? -1 : b.is_demo ? 1 : 0)).map(event => <EventCard 
+                // Sort by creation time descending (newest first)
+                [...events].sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map(event => <EventCard 
                     key={event.id} 
                     event={event} 
                     onViewLeaderboard={onViewLeaderboard}
@@ -214,7 +206,7 @@ export default function HostDashboard({
             ) : (
                 <div className="text-center py-12 border-2 border-dashed border-slate-300 rounded-lg">
                 <h3 className="text-xl font-semibold text-slate-700">¡Aún no hay eventos!</h3>
-                <p className="text-slate-500 mt-2">Haz clic en "Crear Nuevo Evento" para comenzar.</p>
+                <p className="text-slate-500 mt-2">Compra un código de licencia y haz clic en "Crear Nuevo Evento".</p>
                 </div>
             )}
             </div>

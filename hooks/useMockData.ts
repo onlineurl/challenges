@@ -3,46 +3,8 @@ import type { Event, Challenge, Participant, CompletedChallenge } from '../types
 import { addSeconds, isAfter, isBefore, parseISO, differenceInSeconds } from 'date-fns';
 import type { IDataService, AdminAccessCode } from '../services/IDataService';
 
-// --- INITIAL MOCK DATA ---
-const DEMO_EVENT_ID = 'evt_demo_0';
-
-const DEMO_EVENT: Event = {
-  id: DEMO_EVENT_ID,
-  host_id: 'user_host_1',
-  title: "Evento Demo ATR",
-  type: 'other',
-  description: "¡Explora las funciones de la app! Únete con el código DEMO123.",
-  join_code: 'DEMO123',
-  status: 'active',
-  is_demo: true,
-  qr_code_url: 'dummy_url',
-  created_at: new Date().toISOString(),
-  config: {
-    timePerChallenge: 300,
-    maxParticipants: 50,
-    autoAssign: true,
-    points: { easy: 10, medium: 20, hard: 30 },
-    compression: { quality: 0.8, maxWidth: 1200 },
-    timer_mode: 'individual',
-  },
-};
-
-const DEMO_CHALLENGES: Challenge[] = [
-  { id: 'ch_demo_1', event_id: DEMO_EVENT_ID, title: 'Encuentra algo Azul', description: 'Toma una foto del objeto más azul que veas cerca.', difficulty: 'easy', time_limit: 120, points: 10, is_active: true },
-  { id: 'ch_demo_2', event_id: DEMO_EVENT_ID, title: 'Selfie en Equipo', description: 'Hazte una selfie con al menos otras dos personas haciendo caras graciosas.', difficulty: 'medium', time_limit: 300, points: 20, is_active: true, is_special: true },
-  { id: 'ch_demo_3', event_id: DEMO_EVENT_ID, title: 'Detalle Oculto', description: "Fotografía un detalle pequeño de la habitación que otros no hayan visto.", difficulty: 'hard', time_limit: 400, points: 30, is_active: true },
-];
-
-const DEMO_PARTICIPANTS: Participant[] = [
-    { id: 'part_demo_1', event_id: DEMO_EVENT_ID, name: 'Capitán Foto', device_id: 'dev_demo_1', total_points: 30, total_time_taken_seconds: 350, avatar_color: '#3b82f6', avatar_emoji: '😎' },
-    { id: 'part_demo_2', event_id: DEMO_EVENT_ID, name: 'Flash Rápido', device_id: 'dev_demo_2', total_points: 10, total_time_taken_seconds: 95, avatar_color: '#10b981', avatar_emoji: '📸' },
-    { id: 'part_demo_3', event_id: DEMO_EVENT_ID, name: 'Nuevo Jugador', device_id: 'dev_demo_3', total_points: 0, total_time_taken_seconds: 0, avatar_color: '#f59e0b', avatar_emoji: '🥳' },
-];
-
-const DEMO_COMPLETED: CompletedChallenge[] = [
-    { id: 'comp_demo_1', participant_id: 'part_demo_1', challenge_id: 'ch_demo_3', media_url: 'https://picsum.photos/seed/lamp/400/400', original_filename: 'demo1.jpg', compressed_size: 80000, points_awarded: 30, completed_at: new Date().toISOString(), time_taken_seconds: 350, participant_name: 'Capitán Foto', challenge_title: 'Detalle Oculto', status: 'valid' },
-    { id: 'comp_demo_2', participant_id: 'part_demo_2', challenge_id: 'ch_demo_1', media_url: 'https://picsum.photos/seed/blue-cup/400/400', original_filename: 'demo2.jpg', compressed_size: 65000, points_awarded: 10, completed_at: new Date().toISOString(), time_taken_seconds: 95, participant_name: 'Flash Rápido', challenge_title: 'Encuentra algo Azul', status: 'valid' },
-];
+// --- INITIAL DATA STORE (EMPTY FOR PRODUCTION) ---
+// Demo data has been removed to prevent unauthorized "free" usage simulation.
 
 const dataStore: {
   events: Event[];
@@ -52,14 +14,12 @@ const dataStore: {
   usedAccessCodes: Map<string, string>; // Maps access_code -> event_id
   adminCodes: AdminAccessCode[];
 } = {
-  events: [ DEMO_EVENT ],
-  challenges: [ ...DEMO_CHALLENGES ],
-  participants: [ ...DEMO_PARTICIPANTS ],
-  completedChallenges: [ ...DEMO_COMPLETED ],
+  events: [],
+  challenges: [],
+  participants: [],
+  completedChallenges: [],
   usedAccessCodes: new Map(),
-  adminCodes: [
-      { id: 'ac_1', code: 'ADMIN-1234', created_at: new Date().toISOString() }
-  ]
+  adminCodes: []
 };
 
 

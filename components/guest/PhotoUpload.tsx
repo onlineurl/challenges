@@ -99,13 +99,13 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
 
   if (uploadState === 'previewing' || uploadState === 'compressing' || uploadState === 'uploading' || uploadState === 'verifying') {
       return (
-          <div className="w-full bg-white rounded-lg shadow-inner overflow-hidden flex flex-col h-full relative">
-            {/* Image Container - Constrained Height */}
-            <div className="relative w-full bg-black flex items-center justify-center max-h-[55vh]">
+          <div className="w-full bg-white rounded-lg shadow-inner overflow-hidden flex flex-col relative h-[65vh] md:h-auto">
+            {/* Image Container - Flexible Height with constraints */}
+            <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
               <img 
                 src={preview!} 
                 alt="Preview" 
-                className={`w-full h-auto max-h-[55vh] object-contain transition-opacity duration-300 ${uploadState === 'verifying' ? 'opacity-50' : 'opacity-100'}`} 
+                className={`w-full h-full object-contain transition-opacity duration-300 ${uploadState === 'verifying' ? 'opacity-50' : 'opacity-100'}`} 
               />
               {uploadState === 'verifying' && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -115,7 +115,7 @@ export default function PhotoUpload({ onUploadComplete, compressionQuality, comp
             </div>
             
             {/* Sticky/Fixed Bottom Action Bar */}
-            <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+            <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] shrink-0">
                 {compressionInfo && <CompressionStats original={compressionInfo.originalSize} compressed={compressionInfo.compressedSize} ratio={compressionInfo.ratio} />}
                 
                 {uploadState === 'previewing' ? (

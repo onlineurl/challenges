@@ -9,7 +9,7 @@ import PhotoGallery from './components/host/PhotoGallery';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { useDataService } from './hooks/useDataService';
 import type { Participant, Event } from './types';
-import { Home, PartyPopper, ShieldAlert, MessageCircle, ShoppingBag } from 'lucide-react';
+import { Home, PartyPopper, ShieldAlert, MessageCircle, ShoppingBag, Camera, Zap } from 'lucide-react';
 import { Spinner } from './components/common/Spinner';
 import { supabase } from './supabaseClient';
 import AuthView from './components/host/AuthView';
@@ -161,65 +161,83 @@ export default function App() {
       case 'home':
       default:
         return (
-          <div className="flex flex-col items-center justify-center min-h-[100dvh] p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-center relative overflow-hidden">
-            {/* Background Decorations */}
-            <div className="absolute top-10 left-10 text-yellow-300 opacity-20 animate-spin-slow"><PartyPopper size={80}/></div>
-            <div className="absolute bottom-20 right-10 text-purple-300 opacity-20"><PartyPopper size={120}/></div>
+          <div className="flex flex-col items-center justify-center min-h-[100dvh] bg-slate-50 relative overflow-hidden">
+            {/* Modern Abstract Background */}
+            <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-200/40 rounded-full blur-[100px] pointer-events-none"></div>
             
-            <div className="relative z-10 max-w-lg w-full">
-              <div className="mb-10 animate-bounce-in">
-                <PartyPopper className="mx-auto h-24 w-24 text-indigo-600 mb-4 drop-shadow-lg" />
-                <h1 className="text-6xl font-black tracking-tighter text-slate-900 drop-shadow-sm leading-none">
-                  ATR<br/><span className="text-indigo-600">Party</span>
+            <div className="relative z-10 w-full max-w-lg px-6 flex flex-col h-full justify-between py-10">
+              
+              {/* Header / Logo Area */}
+              <div className="flex-1 flex flex-col items-center justify-center mt-4">
+                <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-indigo-500 blur-xl opacity-20 rounded-full"></div>
+                    <div className="relative bg-gradient-to-br from-indigo-600 to-violet-600 w-24 h-24 rounded-3xl rotate-3 flex items-center justify-center shadow-2xl shadow-indigo-300 ring-4 ring-white">
+                        <Camera className="text-white w-12 h-12" />
+                        <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 p-1.5 rounded-full shadow-sm">
+                            <Zap className="w-4 h-4 fill-current" />
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 className="text-5xl font-black text-slate-900 tracking-tight text-center leading-none mb-2">
+                  ATR <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Party</span>
                 </h1>
-                <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-600 mt-2">
-                  (A Todo Reto)
-                </h2>
-                <p className="mt-6 text-xl text-slate-600 font-medium leading-relaxed">
-                  El juego definitivo para tus eventos. <br/>¡Cumple retos, saca fotos y gana!
+                
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 text-white rounded-full text-xs font-bold tracking-widest uppercase mb-6">
+                    <PartyPopper className="w-3 h-3 text-yellow-400" />
+                    A Todo Reto
+                </div>
+
+                <p className="text-lg text-slate-500 font-medium text-center max-w-xs leading-relaxed">
+                  El juego de retos fotográficos para llevar tu evento al siguiente nivel.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4 w-full">
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-3 w-full mb-8">
                 <button 
                     onClick={() => setView('guest_join')} 
-                    className="w-full text-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-2xl px-8 py-5 shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-2"
+                    className="group w-full relative overflow-hidden rounded-2xl bg-slate-900 p-4 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl"
                 >
-                    <PartyPopper className="w-6 h-6"/>
-                    UNIRSE A EVENTO
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="relative flex items-center justify-center gap-3">
+                        <div className="bg-white/20 p-2 rounded-lg"><Zap className="w-6 h-6 text-white fill-current"/></div>
+                        <span className="text-xl font-bold text-white tracking-wide">JUGAR AHORA</span>
+                    </div>
                 </button>
+
                 <button 
                     onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} 
-                    className="w-full text-lg font-bold text-slate-700 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl px-8 py-4 shadow-md border border-slate-200 transition-all"
+                    className="w-full text-lg font-bold text-slate-700 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl p-4 shadow-sm border-2 border-slate-100 transition-all"
                 >
-                    Soy Anfitrión (Login)
+                    Soy Anfitrión
                 </button>
               </div>
 
-              {/* Purchase / Contact Section */}
-              <div className="mt-12 pt-8 border-t border-slate-200/60">
-                  <p className="text-sm text-slate-400 font-semibold uppercase tracking-widest mb-4">¿Organizas un evento?</p>
-                  <div className="flex gap-3">
+              {/* Purchase / Contact Footer */}
+              <div className="w-full">
+                  <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm">
                       <button 
                         onClick={handleBuyCode}
-                        className="flex-1 flex flex-col items-center justify-center p-4 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-xl shadow-lg shadow-green-200 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-colors"
                       >
-                          <ShoppingBag className="w-6 h-6 mb-1"/>
+                          <ShoppingBag className="w-5 h-5"/>
                           <span className="font-bold text-sm">Comprar Código</span>
                       </button>
                       <button 
                          onClick={handleBuyCode}
-                         className="flex-1 flex flex-col items-center justify-center p-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl shadow-sm transition-colors"
+                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-colors"
                       >
-                          <MessageCircle className="w-6 h-6 mb-1 text-green-500"/>
-                          <span className="font-bold text-sm">Contacto WP</span>
+                          <MessageCircle className="w-5 h-5 text-green-500"/>
+                          <span className="font-bold text-sm">Contacto</span>
                       </button>
                   </div>
               </div>
 
               {showAdminEntry && (
-                   <button onClick={() => setView('admin_dashboard')} className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-red-500 transition w-full">
-                      <ShieldAlert className="w-3 h-3" /> Acceso Super Admin
+                   <button onClick={() => setView('admin_dashboard')} className="absolute top-4 right-4 text-slate-300 hover:text-red-400 transition">
+                      <ShieldAlert className="w-5 h-5" />
                    </button>
               )}
             </div>
@@ -229,14 +247,16 @@ export default function App() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto font-sans bg-slate-100 min-h-[100dvh]">
+    <main className="max-w-md mx-auto font-sans bg-slate-50 min-h-[100dvh] shadow-2xl relative">
       {view !== 'home' && view !== 'host_auth' && view !== 'admin_dashboard' && (
         <header className="p-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10 pt-safe">
           <div className="flex items-center gap-2">
-            <PartyPopper className="h-6 w-6 text-indigo-500" />
-            <span className="text-xl font-bold text-slate-800">ATR Party</span>
+            <div className="bg-indigo-600 p-1.5 rounded-lg">
+                <PartyPopper className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-slate-800">ATR Party</span>
           </div>
-          <button onClick={navigateHome} className="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Ir al inicio"><Home className="h-5 w-5 text-slate-600"/><span className="sr-only">Inicio</span></button>
+          <button onClick={navigateHome} className="p-2 rounded-full hover:bg-slate-100 transition" aria-label="Ir al inicio"><Home className="h-5 w-5 text-slate-600"/><span className="sr-only">Inicio</span></button>
         </header>
       )}
       {renderView()}
