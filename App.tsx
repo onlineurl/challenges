@@ -9,10 +9,11 @@ import PhotoGallery from './components/host/PhotoGallery';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { useDataService } from './hooks/useDataService';
 import type { Participant, Event } from './types';
-import { Home, PartyPopper, ShieldAlert } from 'lucide-react';
+import { Home, PartyPopper, ShieldAlert, MessageCircle, ShoppingBag } from 'lucide-react';
 import { Spinner } from './components/common/Spinner';
 import { supabase } from './supabaseClient';
 import AuthView from './components/host/AuthView';
+import { WHATSAPP_CONTACT_URL } from './utils/links';
 
 
 type View = 'home' | 'host_auth' | 'host_dashboard' | 'guest_join' | 'guest_challenge' | 'leaderboard' | 'challenge_manager' | 'photo_gallery' | 'admin_dashboard';
@@ -32,9 +33,9 @@ export default function App() {
   const dataService = useDataService();
 
   useEffect(() => {
-    // Check for secret admin url param
+    // Check for secret admin url param (support both for convenience)
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('adminadmin') === 'true') {
+    if (urlParams.get('adminadmin') === 'true' || urlParams.get('admin') === 'true') {
         setShowAdminEntry(true);
     }
 
@@ -124,6 +125,10 @@ export default function App() {
     setSelectedEventId(null);
     window.history.replaceState({}, document.title, window.location.pathname);
   };
+
+  const handleBuyCode = () => {
+      window.open(WHATSAPP_CONTACT_URL, '_blank');
+  };
   
   const renderView = () => {
     if (isLoadingSession) {
@@ -156,22 +161,68 @@ export default function App() {
       case 'home':
       default:
         return (
-          <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-            <div className="text-center">
-              <PartyPopper className="mx-auto h-20 w-20 text-indigo-500 animate-bounce" />
-              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl">ATR Party</h1>
-              <h2 className="text-2xl font-bold text-indigo-600 sm:text-3xl">(A Todo Reto)</h2>
-              <p className="mt-4 max-w-xl mx-auto text-lg text-slate-600">El juego definitivo para tus eventos. ¡Completa retos, toma fotos y gana puntos!</p>
+          <div className="flex flex-col items-center justify-center min-h-[100dvh] p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-center relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-10 left-10 text-yellow-300 opacity-20 animate-spin-slow"><PartyPopper size={80}/></div>
+            <div className="absolute bottom-20 right-10 text-purple-300 opacity-20"><PartyPopper size={120}/></div>
+            
+            <div className="relative z-10 max-w-lg w-full">
+              <div className="mb-10 animate-bounce-in">
+                <PartyPopper className="mx-auto h-24 w-24 text-indigo-600 mb-4 drop-shadow-lg" />
+                <h1 className="text-6xl font-black tracking-tighter text-slate-900 drop-shadow-sm leading-none">
+                  ATR<br/><span className="text-indigo-600">Party</span>
+                </h1>
+                <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-600 mt-2">
+                  (A Todo Reto)
+                </h2>
+                <p className="mt-6 text-xl text-slate-600 font-medium leading-relaxed">
+                  El juego definitivo para tus eventos. <br/>¡Cumple retos, saca fotos y gana!
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-4 w-full">
+                <button 
+                    onClick={() => setView('guest_join')} 
+                    className="w-full text-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-2xl px-8 py-5 shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-2"
+                >
+                    <PartyPopper className="w-6 h-6"/>
+                    UNIRSE A EVENTO
+                </button>
+                <button 
+                    onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} 
+                    className="w-full text-lg font-bold text-slate-700 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl px-8 py-4 shadow-md border border-slate-200 transition-all"
+                >
+                    Soy Anfitrión (Login)
+                </button>
+              </div>
+
+              {/* Purchase / Contact Section */}
+              <div className="mt-12 pt-8 border-t border-slate-200/60">
+                  <p className="text-sm text-slate-400 font-semibold uppercase tracking-widest mb-4">¿Organizas un evento?</p>
+                  <div className="flex gap-3">
+                      <button 
+                        onClick={handleBuyCode}
+                        className="flex-1 flex flex-col items-center justify-center p-4 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-xl shadow-lg shadow-green-200 transition-colors"
+                      >
+                          <ShoppingBag className="w-6 h-6 mb-1"/>
+                          <span className="font-bold text-sm">Comprar Código</span>
+                      </button>
+                      <button 
+                         onClick={handleBuyCode}
+                         className="flex-1 flex flex-col items-center justify-center p-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl shadow-sm transition-colors"
+                      >
+                          <MessageCircle className="w-6 h-6 mb-1 text-green-500"/>
+                          <span className="font-bold text-sm">Contacto WP</span>
+                      </button>
+                  </div>
+              </div>
+
+              {showAdminEntry && (
+                   <button onClick={() => setView('admin_dashboard')} className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-red-500 transition w-full">
+                      <ShieldAlert className="w-3 h-3" /> Acceso Super Admin
+                   </button>
+              )}
             </div>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
-              <button onClick={() => setView('guest_join')} className="w-full text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-lg">Unirse a Evento</button>
-              <button onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} className="w-full text-lg font-semibold text-indigo-700 bg-white hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-200 rounded-lg px-8 py-4 transition-transform transform hover:scale-105 shadow-md border border-indigo-100">Soy Anfitrión</button>
-            </div>
-            {showAdminEntry && (
-                 <button onClick={() => setView('admin_dashboard')} className="mt-8 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition">
-                    <ShieldAlert className="w-4 h-4" /> Acceso Super Admin
-                 </button>
-            )}
           </div>
         );
     }

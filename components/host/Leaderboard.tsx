@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDataService } from '../../hooks/useDataService';
 import type { Event, Participant } from '../../types';
-import { ArrowLeft, Trophy, Info, Settings, Trash2, Share2 } from 'lucide-react';
+import { ArrowLeft, Trophy, Info, Settings, Trash2, Share2, Heart } from 'lucide-react';
 import { Spinner } from '../common/Spinner';
 import ScoreAdjustmentModal from './ScoreAdjustmentModal';
 
@@ -69,6 +69,22 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
     }
   };
 
+  const handleRecommendApp = () => {
+      const text = "¡Tienes que probar ATR Party para tus eventos! 📸🎉 Es muy divertida. Entra aquí:";
+      const url = window.location.origin; // Share the main app URL, not the specific event
+      
+      if (navigator.share) {
+          navigator.share({
+              title: "ATR Party App",
+              text: text,
+              url: url,
+          }).catch(console.error);
+      } else {
+          navigator.clipboard.writeText(`${text} ${url}`);
+          alert("¡Enlace de la app copiado!");
+      }
+  }
+
   if (isLoading) {
       return <div className="p-6 text-center flex justify-center"><Spinner /></div>
   }
@@ -87,7 +103,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
   return (
     <>
     {selectedParticipant && <ScoreAdjustmentModal isOpen={isScoreModalOpen} onClose={() => setIsScoreModalOpen(false)} participant={selectedParticipant} onSave={handleSaveScore} />}
-    <div className="p-4 md:p-6 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-6 bg-slate-50 min-h-screen flex flex-col">
       <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
         <div className="flex items-center gap-4">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-200 transition"><ArrowLeft className="w-6 h-6 text-slate-700" /></button>
@@ -101,7 +117,7 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
       
        <div className="mb-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg"><div className="flex"><div className="flex-shrink-0"><Info className="h-5 w-5 text-blue-400" /></div><div className="ml-3"><p className="text-sm text-blue-700">En caso de empate, gana quien haya tardado menos tiempo total.</p></div></div></div>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden flex-grow mb-6">
         <ul className="divide-y divide-slate-200">
           {participants.length > 0 ? (
             participants.map((p, index) => (
@@ -130,6 +146,16 @@ export default function Leaderboard({ eventId, onBack }: LeaderboardProps) {
             <li className="p-8 text-center text-slate-500">Aún no hay participantes.</li>
           )}
         </ul>
+      </div>
+
+      <div className="mt-auto pt-4 border-t border-slate-200">
+          <button 
+            onClick={handleRecommendApp}
+            className="w-full flex items-center justify-center gap-2 p-4 bg-pink-50 hover:bg-pink-100 text-pink-600 rounded-xl font-bold transition border border-pink-200"
+          >
+              <Heart className="w-5 h-5 fill-current" />
+              ¿Te gustó el juego? ¡Recomiéndanos!
+          </button>
       </div>
     </div>
     </>

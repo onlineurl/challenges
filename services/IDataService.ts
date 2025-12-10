@@ -26,6 +26,7 @@ export interface IDataService {
   getChallengesForEvent(eventId: string): Promise<Challenge[]>;
   getChallenge(id: string): Promise<Challenge | null>;
   addChallengeToEvent(eventId: string, challengeData: NewChallenge): Promise<void>;
+  addChallengesToEvent(eventId: string, challenges: NewChallenge[]): Promise<void>;
   updateChallenge(challengeId: string, challengeData: NewChallenge): Promise<void>;
   deleteChallenge(challengeId: string): Promise<void>;
   

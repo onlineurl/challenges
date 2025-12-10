@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDataService } from '../../hooks/useDataService';
-import { ArrowLeft, PlusCircle, PlayCircle, Star, Clock, Trash2, Edit } from 'lucide-react';
+import { ArrowLeft, PlusCircle, PlayCircle, Star, Clock, Trash2, Edit, Wand2 } from 'lucide-react';
 import type { Event, Challenge, NewChallenge } from '../../types';
 import ChallengeEditorModal from './ChallengeEditorModal';
 import { Spinner } from '../common/Spinner';
+import { CHALLENGE_TEMPLATES } from '../../utils/challengeTemplates';
 
 interface ChallengeManagerProps {
   eventId: string;
@@ -31,7 +32,7 @@ const ChallengeCard: React.FC<{
                     {challenge.is_special && <Star className="w-4 h-4 text-yellow-500" />}
                     <p className="font-semibold text-slate-800">{challenge.title}</p>
                 </div>
-                <p className="text-sm text-slate-500 mt-1 max-w-prose">{challenge.description}</p>
+                <p className="text-sm text-slate-500 mt-1 max-w-prose whitespace-pre-wrap">{challenge.description}</p>
                 <div className="flex items-center gap-4 mt-2 text-xs text-slate-600">
                     <span className="font-bold capitalize px-2 py-0.5 rounded-full bg-slate-100">
                         {challenge.difficulty === 'easy' ? 'Fácil' : challenge.difficulty === 'medium' ? 'Media' : 'Difícil'}
@@ -69,6 +70,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [editingChallenge, setEditingChallenge] = useState<Challenge | undefined>(undefined);
   
   const fetchData = useCallback(async () => {
@@ -119,6 +121,21 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
     }
   }
 
+  const handleGenerateChallenges = async (templateKey: keyof typeof CHALLENGE_TEMPLATES) => {
+      setIsLoading(true);
+      const template = CHALLENGE_TEMPLATES[templateKey];
+      try {
+          await dataService.addChallengesToEvent(eventId, template.challenges);
+          alert(`¡${template.challenges.length} retos de ${template.label} agregados exitosamente!`);
+      } catch (error) {
+          console.error(error);
+          alert("Error al generar retos. Intenta de nuevo.");
+      } finally {
+          setIsTemplateModalOpen(false);
+          fetchData();
+      }
+  }
+
   if (isLoading) {
       return <div className="p-6 text-center flex justify-center"><Spinner size="lg" /></div>
   }
@@ -138,6 +155,31 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
         onSave={handleSaveChallenge}
         challenge={editingChallenge}
       />
+      
+      {/* Template Selection Modal */}
+      {isTemplateModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setIsTemplateModalOpen(false)}>
+              <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2"><Wand2 className="w-5 h-5 text-indigo-500"/> Generar Retos con IA</h3>
+                  <p className="text-slate-600 mb-4 text-sm">Selecciona el tipo de evento para generar automáticamente un set de retos divertidos y equilibrados.</p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {(Object.keys(CHALLENGE_TEMPLATES) as Array<keyof typeof CHALLENGE_TEMPLATES>).map(key => (
+                          <button 
+                            key={key}
+                            onClick={() => handleGenerateChallenges(key)}
+                            className="p-4 text-left border rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition group"
+                          >
+                              <p className="font-bold text-slate-800 group-hover:text-indigo-700">{CHALLENGE_TEMPLATES[key].label}</p>
+                              <p className="text-xs text-slate-500 mt-1">{CHALLENGE_TEMPLATES[key].challenges.length} retos</p>
+                          </button>
+                      ))}
+                  </div>
+                  <button onClick={() => setIsTemplateModalOpen(false)} className="mt-6 w-full py-2 bg-slate-100 text-slate-700 font-semibold rounded-lg hover:bg-slate-200">Cancelar</button>
+              </div>
+          </div>
+      )}
+
       <div className="p-4 md:p-6 bg-slate-50 min-h-screen">
         <div className="flex items-center gap-4 mb-6">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-200 transition">
@@ -157,7 +199,14 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
             </div>
         )}
         
-        <div className="flex justify-end mb-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 mb-4">
+            <button 
+                onClick={() => setIsTemplateModalOpen(true)}
+                className="flex items-center justify-center gap-2 px-5 py-3 font-semibold text-indigo-700 bg-indigo-100 rounded-lg shadow-sm hover:bg-indigo-200 transition"
+            >
+                <Wand2 className="w-5 h-5" />
+                Crear con IA
+            </button>
             <button 
                 onClick={handleOpenCreateModal}
                 className="flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 transition"
@@ -182,7 +231,7 @@ export default function ChallengeManager({ eventId, onBack }: ChallengeManagerPr
               ))
             ) : (
               <li className="p-8 text-center text-slate-500 bg-white rounded-lg shadow-sm">
-                No hay retos creados aún. ¡Añade uno para empezar!
+                No hay retos creados aún. ¡Añade uno o usa la IA para empezar!
               </li>
             )}
           </ul>

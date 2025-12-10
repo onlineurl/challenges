@@ -197,6 +197,16 @@ export function useMockData(): IDataService {
             dataStore.challenges.push(newChallenge);
             return Promise.resolve();
         },
+        async addChallengesToEvent(eventId, challenges) {
+            const newChallenges: Challenge[] = challenges.map((c, i) => ({
+                ...c,
+                id: `ch_${Date.now()}_${i}`,
+                event_id: eventId,
+                is_active: true
+            }));
+            dataStore.challenges.push(...newChallenges);
+            return Promise.resolve();
+        },
         async updateChallenge(challengeId, challengeData) {
             const index = dataStore.challenges.findIndex(c => c.id === challengeId);
             if (index !== -1) {

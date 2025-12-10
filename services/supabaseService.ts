@@ -138,6 +138,12 @@ export const supabaseService: IDataService = {
       const { error } = await supabase.from('challenges').insert({ ...challengeData, event_id: eventId });
       if (error) throw new Error(`Error añadiendo reto: ${error.message}`);
   },
+
+  async addChallengesToEvent(eventId, challenges) {
+      const payload = challenges.map(c => ({ ...c, event_id: eventId, is_active: true }));
+      const { error } = await supabase.from('challenges').insert(payload);
+      if (error) throw new Error(`Error añadiendo retos masivos: ${error.message}`);
+  },
   
   async updateChallenge(challengeId, challengeData) {
       const { error } = await supabase.from('challenges').update(challengeData).eq('id', challengeId);
