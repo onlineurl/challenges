@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDataService } from '../../hooks/useDataService';
 import { supabase } from '../../supabaseClient';
 import type { Session } from '@supabase/supabase-js';
-import { ShieldCheck, LogOut, Copy, RefreshCw, Key, ArrowLeft, Loader2 } from 'lucide-react';
+import { ShieldCheck, LogOut, Copy, RefreshCw, Key, ArrowLeft, ShieldAlert } from 'lucide-react';
 import AuthView from '../host/AuthView';
 import { Spinner } from '../common/Spinner';
 
@@ -19,11 +19,9 @@ interface AdminAccessCode {
   host_email?: string;
 }
 
-// ⚠️ IMPORTANT: In a real production app, rely on Row Level Security (RLS) in Supabase 
-// rather than just frontend checks. This array is a second layer of defense/UX.
-// Add your email here to allow access in the UI.
+// ⚠️ IMPORTANT: Add your email here to allow access to the UI.
 const ALLOWED_ADMIN_EMAILS = [
-    'tu_email@ejemplo.com', // Replace with your email
+    'apixelarte@gmail.com', // CAMBIA ESTO POR TU EMAIL REAL
     'admin@atrparty.com'
 ];
 
@@ -60,10 +58,8 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
         return;
     }
 
-    if (session?.user?.email) {
-        // Simple frontend check. The real security is in the SQL RLS/Functions.
-        // If you ran the SQL provided, the backend will throw error if not admin anyway.
-        // For now, we allow access to the UI if logged in, but data fetch might fail if not authorized DB-side.
+    // Strict Check: User must be logged in AND their email must be in the whitelist
+    if (session?.user?.email && ALLOWED_ADMIN_EMAILS.includes(session.user.email)) {
         setIsAdmin(true); 
     } else {
         setIsAdmin(false);
@@ -107,10 +103,11 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    onBack();
+    // Only go back if fully signing out from a non-admin state or voluntarily
+    if (!session) onBack(); 
   };
 
-  if (isLoadingAuth) return <div className="flex justify-center p-10"><Spinner /></div>;
+  if (isLoadingAuth) return <div className="flex justify-center p-10 min-h-screen bg-slate-800"><Spinner className="text-white border-white" /></div>;
 
   // 1. Force Login if not authenticated
   if (!session) {
@@ -131,7 +128,28 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
     );
   }
 
-  // 2. Admin Dashboard UI
+  // 2. Access Denied if logged in but not whitelisted
+  if (session && !isAdmin) {
+      return (
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 text-white text-center">
+             <ShieldAlert className="w-20 h-20 text-red-500 mb-6" />
+             <h2 className="text-3xl font-bold mb-2">Acceso Denegado</h2>
+             <p className="text-slate-400 mb-8 max-w-md">
+                El usuario <b>{session.user.email}</b> no tiene permisos de Super Administrador para acceder a este panel.
+             </p>
+             <div className="flex gap-4">
+                <button onClick={onBack} className="px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg font-semibold transition">
+                    Volver al Inicio
+                </button>
+                <button onClick={handleSignOut} className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition">
+                    Cerrar Sesión
+                </button>
+             </div>
+        </div>
+      );
+  }
+
+  // 3. Admin Dashboard UI
   return (
     <div className="min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
