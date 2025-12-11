@@ -21,7 +21,7 @@ interface AdminAccessCode {
 
 // ⚠️ IMPORTANT: Add your email here to allow access to the UI.
 const ALLOWED_ADMIN_EMAILS = [
-    'tu_email@ejemplo.com', // CAMBIA ESTO POR TU EMAIL REAL
+    'apixelarte@gmail.com', // CAMBIA ESTO POR TU EMAIL REAL
     'admin@atrparty.com'
 ];
 
