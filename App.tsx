@@ -209,7 +209,7 @@ export default function App() {
 
                 <button 
                     onClick={() => setView(session ? 'host_dashboard' : 'host_auth')} 
-                    className="w-full text-lg font-bold text-slate-700 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl p-4 shadow-sm border-2 border-slate-100 transition-all"
+                    className="w-full text-lg font-bold text-slate-900 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl p-4 shadow-sm border-2 border-slate-200 transition-all"
                 >
                     Soy Anfitrión
                 </button>
@@ -217,19 +217,19 @@ export default function App() {
 
               {/* Purchase / Contact Footer */}
               <div className="w-full">
-                  <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
                       <button 
                         onClick={handleBuyCode}
-                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors shadow-md shadow-green-200"
                       >
                           <ShoppingBag className="w-5 h-5"/>
                           <span className="font-bold text-sm">Comprar Código</span>
                       </button>
                       <button 
                          onClick={handleBuyCode}
-                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-colors"
+                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 rounded-xl transition-colors"
                       >
-                          <MessageCircle className="w-5 h-5 text-green-500"/>
+                          <MessageCircle className="w-5 h-5 text-green-600"/>
                           <span className="font-bold text-sm">Contacto</span>
                       </button>
                   </div>

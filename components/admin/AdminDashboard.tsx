@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDataService } from '../../hooks/useDataService';
 import { supabase } from '../../supabaseClient';
 import type { Session } from '@supabase/supabase-js';
-import { ShieldCheck, LogOut, Copy, RefreshCw, Key, ArrowLeft, ShieldAlert } from 'lucide-react';
+import { ShieldCheck, LogOut, Copy, RefreshCw, Key, ArrowLeft, ShieldAlert, AlertCircle } from 'lucide-react';
 import AuthView from '../host/AuthView';
 import { Spinner } from '../common/Spinner';
 
@@ -21,7 +21,7 @@ interface AdminAccessCode {
 
 // ⚠️ IMPORTANT: Add your email here to allow access to the UI.
 const ALLOWED_ADMIN_EMAILS = [
-    'apixelarte@gmail.com', // CAMBIA ESTO POR TU EMAIL REAL
+    'tu_email@ejemplo.com', // CAMBIA ESTO POR TU EMAIL REAL
     'admin@atrparty.com'
 ];
 
@@ -33,6 +33,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const dataService = useDataService();
   const [codes, setCodes] = useState<AdminAccessCode[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [newCodePrefix, setNewCodePrefix] = useState('PRO');
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
 
@@ -69,12 +70,13 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
 
   const fetchCodes = async () => {
     setIsLoadingData(true);
+    setFetchError(null);
     try {
         const data = await dataService.getAdminAccessCodes();
         setCodes(data);
-    } catch (error) {
-        console.error(error);
-        alert("Error cargando códigos. Verifica que tu usuario tenga permisos de Super Admin en la base de datos.");
+    } catch (error: any) {
+        console.error("Super Admin Error Details:", error);
+        setFetchError(error.message || "Error desconocido");
     } finally {
         setIsLoadingData(false);
     }
@@ -173,6 +175,21 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
                 </button>
             </div>
         </div>
+        
+        {fetchError && (
+             <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+                 <div className="flex items-start">
+                     <AlertCircle className="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+                     <div>
+                         <h4 className="font-bold text-red-800">Error de Base de Datos (Backend)</h4>
+                         <p className="text-sm text-red-700 mt-1">{fetchError}</p>
+                         <p className="text-xs text-red-600 mt-2 bg-red-100 p-2 rounded">
+                            <b>Solución:</b> Ejecuta el script SQL 'is_super_admin' en Supabase reemplazando el email por: <b>{session.user.email}</b>
+                         </p>
+                     </div>
+                 </div>
+             </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
@@ -269,7 +286,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
                                             </td>
                                         </tr>
                                     ))}
-                                    {codes.length === 0 && (
+                                    {codes.length === 0 && !fetchError && (
                                         <tr>
                                             <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
                                                 No hay códigos generados aún.
